@@ -114,7 +114,7 @@ make docker-up
 
 ```bash
 # Development (auto-reload)
-uvicorn app.main:app --reload --port 8000
+python -m uvicorn app.main:app --reload --port 8000
 # or
 make run
 
@@ -187,7 +187,7 @@ make run
 # Terminal 2 — run tests
 make test
 # or
-pytest tests/ -v
+python -m pytest tests/ -v
 ```
 
 ### Test Coverage
@@ -212,6 +212,9 @@ make load-test
 
 # Headless — 50 users, spawn 10/s, run 30 seconds
 make load-test-headless
+
+# Or directly:
+python -m locust -f locustfile.py --host=http://127.0.0.1:8000
 ```
 
 The Locust file defines two tasks:
@@ -258,28 +261,28 @@ Oversell:       false
 
 ```bash
 # Buy with Redis strategy (default)
-curl -X POST "http://localhost:8000/buy?mode=redis"
+curl.exe -X POST "http://localhost:8000/buy?mode=redis"
 
 # Buy with lock strategy
-curl -X POST "http://localhost:8000/buy?mode=lock"
+curl.exe -X POST "http://localhost:8000/buy?mode=lock"
 
 # Buy with naive strategy (intentional race condition)
-curl -X POST "http://localhost:8000/buy?mode=naive"
+curl.exe -X POST "http://localhost:8000/buy?mode=naive"
 
 # Buy with atomic CAS strategy
-curl -X POST "http://localhost:8000/buy?mode=atomic"
+curl.exe -X POST "http://localhost:8000/buy?mode=atomic"
 
 # Buy with optimistic locking
-curl -X POST "http://localhost:8000/buy?mode=optimistic"
+curl.exe -X POST "http://localhost:8000/buy?mode=optimistic"
 
 # Buy via queue worker
-curl -X POST "http://localhost:8000/buy?mode=queue"
+curl.exe -X POST "http://localhost:8000/buy?mode=queue"
 
 # Check all stocks
 curl "http://localhost:8000/stock"
 
 # Reset all stocks to INITIAL_STOCK
-curl -X POST "http://localhost:8000/reset"
+curl.exe -X POST "http://localhost:8000/reset"
 ```
 
 ### Example Response
@@ -298,11 +301,11 @@ curl -X POST "http://localhost:8000/reset"
 
 | Target | Command | Description |
 |--------|---------|-------------|
-| `make run` | `uvicorn app.main:app --reload` | Dev server with hot-reload |
-| `make run-prod` | `uvicorn ... --workers 4` | Production multi-worker server |
-| `make test` | `pytest tests/ -v` | Run full test suite |
-| `make load-test` | `locust -f locustfile.py ...` | Interactive Locust UI |
-| `make load-test-headless` | `locust --headless ...` | Headless load test |
+| `make run` | `python -m uvicorn app.main:app --reload` | Dev server with hot-reload |
+| `make run-prod` | `python -m uvicorn ... --workers 4` | Production multi-worker server |
+| `make test` | `python -m pytest tests/ -v` | Run full test suite |
+| `make load-test` | `python -m locust -f locustfile.py ...` | Interactive Locust UI |
+| `make load-test-headless` | `python -m locust --headless ...` | Headless load test |
 | `make reset` | `curl POST /reset` | Reset all stocks via API |
 | `make stock` | `curl GET /stock` | Print current stock JSON |
 | `make docker-up` | `docker compose up -d redis` | Start Redis container |

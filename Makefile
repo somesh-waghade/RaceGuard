@@ -10,24 +10,24 @@ LOCUST_TIME  ?= 30s
 
 # ── Development server ───────────────────────────────────────────────────────
 run:
-	uvicorn app.main:app --host $(HOST) --port $(PORT) --reload
+	python -m uvicorn app.main:app --host $(HOST) --port $(PORT) --reload
 
 run-prod:
-	uvicorn app.main:app --host $(HOST) --port $(PORT) --workers $(WORKERS)
+	python -m uvicorn app.main:app --host $(HOST) --port $(PORT) --workers $(WORKERS)
 
 # ── Tests ────────────────────────────────────────────────────────────────────
 test:
-	pytest tests/ -v --tb=short
+	python -m pytest tests/ -v --tb=short
 
 test-ci:
-	pytest tests/ -v --tb=short --no-header -q
+	python -m pytest tests/ -v --tb=short --no-header -q
 
 # ── Load testing ─────────────────────────────────────────────────────────────
 load-test:
-	locust -f locustfile.py --host=http://$(HOST):$(PORT)
+	python -m locust -f locustfile.py --host=http://$(HOST):$(PORT)
 
 load-test-headless:
-	locust -f locustfile.py \
+	python -m locust -f locustfile.py \
 	       --host=http://$(HOST):$(PORT) \
 	       --headless \
 	       -u $(LOCUST_USERS) \
@@ -36,10 +36,10 @@ load-test-headless:
 
 # ── Reset stock via API ───────────────────────────────────────────────────────
 reset:
-	curl -s -X POST http://$(HOST):$(PORT)/reset | python -m json.tool
+	curl.exe -s -X POST http://$(HOST):$(PORT)/reset | python -m json.tool
 
 stock:
-	curl -s http://$(HOST):$(PORT)/stock | python -m json.tool
+	curl.exe -s http://$(HOST):$(PORT)/stock | python -m json.tool
 
 # ── Docker ───────────────────────────────────────────────────────────────────
 docker-up:
