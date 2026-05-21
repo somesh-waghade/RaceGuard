@@ -32,6 +32,8 @@ def buy_lock() -> tuple[bool, int]:
 
     with _lock:
         if lock_stock > 0:
+            import time
+            time.sleep(0.05)     # Simulate database work while holding lock
             lock_stock -= 1
             return True, lock_stock
         return False, lock_stock

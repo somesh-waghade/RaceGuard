@@ -47,6 +47,10 @@ def buy_optimistic() -> tuple[bool, int]:
         if snap_stock <= 0:
             return False, snap_stock
 
+        # Simulate database transaction delay / work before commit
+        import time
+        time.sleep(0.05)
+
         # --- Commit window (brief lock) ---
         with _commit_lock:
             if _state["version"] == snap_version:  # No one else committed

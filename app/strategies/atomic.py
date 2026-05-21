@@ -59,6 +59,10 @@ def buy_atomic() -> tuple[bool, int]:
         if current <= 0:
             return False, current
 
+        # Simulate network latency / work before attempting CAS commit
+        import time
+        time.sleep(0.05)
+
         # Attempt CAS: only succeeds if nobody changed current meanwhile
         if _compare_and_swap(current, current - 1):
             return True, current - 1

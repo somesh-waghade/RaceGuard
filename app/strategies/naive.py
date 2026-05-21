@@ -27,11 +27,17 @@ def buy_naive() -> tuple[bool, int]:
         was logically attempted (stock > 0 at read time).
     """
     global naive_stock
+    import time
 
     # --- RACE WINDOW STARTS HERE ---
-    if naive_stock > 0:          # Thread A and Thread B both read 1
-        naive_stock -= 1         # Both decrement → stock becomes -1
-        return True, naive_stock  # Both report success!
+    if naive_stock > 0:
+        # Explicit READ → SLEEP → WRITE-BACK pattern
+        # This guarantees the race: Thread A reads current=5, Thread B reads
+        # current=5, both sleep, both write 4 → one sale is lost / oversold.
+        current = naive_stock                    # Step 1: READ
+        time.sleep(0.05)                         # Step 2: SLEEP (wide 50ms window)
+        naive_stock = current - 1                # Step 3: WRITE-BACK stale value
+        return True, naive_stock                 # Both report success!
     # --- RACE WINDOW ENDS HERE ---
 
     return False, naive_stock
